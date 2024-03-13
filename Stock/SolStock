@@ -1,0 +1,56 @@
+class Stock {
+    constructor() {
+        this.stockItems = [];
+    }
+
+    findItemIndex(id) {
+        return this.stockItems.findIndex(item => item.itemId === id);
+    }
+
+    addItem(id, amount) {
+        if (id === null || id === undefined || amount === null || amount === undefined) {
+            return -1;
+        }
+
+        const index = this.findItemIndex(id);
+        if (index !== -1) {
+            this.stockItems[index].quantity += amount;
+        } else {
+            this.stockItems.push({ itemId: id, quantity: amount });
+        }
+        return amount;
+    }
+
+    sell(id, amount) {
+        const index = this.findItemIndex(id);
+        if (index !== -1) {
+            if (this.stockItems[index].quantity >= amount) {
+                this.stockItems[index].quantity -= amount;
+                return amount;
+            } else {
+                // Not enough stock to sell
+                return -1;
+            }
+        } else {
+            // Item not found in stock
+            return -1;
+        }
+    }
+
+    getAllStockAmount() {
+        return this.stockItems.reduce((total, item) => total + item.quantity, 0);
+    }
+}
+
+// Example usage:
+
+const myStock = new Stock();
+myStock.addItem(101, 100);
+myStock.addItem(102, 500);
+console.log(myStock.getAllStockAmount()); // Output: 600
+
+myStock.sell(101, 50);
+console.log(myStock.getAllStockAmount()); // Output: 550
+
+myStock.sell(102, 600); // Trying to sell more than available
+console.log(myStock.getAllStockAmount()); // Output: 550
