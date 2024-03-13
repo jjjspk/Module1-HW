@@ -1,0 +1,47 @@
+class Members {
+    constructor() {
+        this.members = [];
+        this.autoId = 1; // Initialize autoId
+    }
+
+    findMemberId(id) {
+        return this.members.findIndex(member => member.memberId === id);
+    }
+
+    findMemberName(name) {
+        return this.members.findIndex(member => member.memberName.toLowerCase() === name.toLowerCase());
+    }
+
+    subscribe(name) {
+        if (!name) return -1; // If name is not provided, return -1
+
+        const index = this.findMemberName(name);
+        if (index !== -1) return -1; // If name already exists, return -1
+
+        const memberId = this.autoId++; // Get the autoId and then increment it
+        this.members.push({ memberId, memberName: name });
+        return this.members.length; // Return new length of members array
+    }
+
+    unsubscribe(id) {
+        if (id === undefined) return -1; // If id is undefined, return -1
+
+        const index = this.findMemberId(id);
+        if (index !== -1) {
+            // If member found, remove it
+            this.members.splice(index, 1);
+            return id;
+        } else {
+            return -1; // If member not found, return -1
+        }
+    }
+}
+
+// Example usage:
+
+const myMembers = new Members();
+console.log(myMembers.subscribe("Alice")); // Output: 1 (length of members array)
+console.log(myMembers.subscribe("Bob")); // Output: 2
+console.log(myMembers.subscribe("alice")); // Output: -1 (case-insensitive check)
+console.log(myMembers.unsubscribe(1)); // Output: 1 (removed member with id 1)
+console.log(myMembers.unsubscribe(3)); // Output: -1 (member not found)
